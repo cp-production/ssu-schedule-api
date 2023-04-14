@@ -1,7 +1,7 @@
 package tracto
 
 const TractoUri = "https://scribaproject.space/api/v1.0/schedule"
-const uri = "https://www.sgu.ru/schedule"
+const SsuUri = "https://www.sgu.ru/schedule"
 
 type lessonTime struct {
 	Id           int `json:"id"`

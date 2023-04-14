@@ -8,9 +8,9 @@ import (
 	"regexp"
 )
 
-func ParseDepartments() ([][]string, error) {
+func GetDepartmentList() ([][]string, error) {
 	departmentsList := make([][]string, 0)
-	response, err := http.Get(uri)
+	response, err := http.Get(SsuUri)
 
 	if err != nil && response.StatusCode != http.StatusOK {
 		return departmentsList, err
@@ -38,9 +38,9 @@ func ParseDepartments() ([][]string, error) {
 
 }
 
-func ParseGroup(departmentID string) ([][]string, error) {
+func GetGroupList(departmentID string) ([][]string, error) {
 	groupList := make([][]string, 0)
-	response, err := http.Get(fmt.Sprintf("%s/%s", uri, departmentID))
+	response, err := http.Get(fmt.Sprintf("%s/%s", SsuUri, departmentID))
 
 	if err != nil && response.StatusCode != http.StatusOK {
 		return groupList, err
@@ -67,7 +67,7 @@ func ParseGroup(departmentID string) ([][]string, error) {
 
 }
 
-func ParseJson(educationForm string, department string, studentGroup string) Schedule {
+func GetSchedule(educationForm string, department string, studentGroup string) Schedule {
 	response, err := http.Get(fmt.Sprintf("%s/%s/%s/%s",
 		TractoUri,
 		educationForm,

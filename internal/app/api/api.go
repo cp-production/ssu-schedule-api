@@ -11,7 +11,7 @@ import (
 type Server struct {
 	config *Config
 	router *mux.Router
-	store *store.Store
+	store  *store.Store
 }
 
 func New(config *Config) *Server {
@@ -34,7 +34,7 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc(("/hello"), s.handlerHello())
 }
 
-func (s *Server) configureStore() error{
+func (s *Server) configureStore() error {
 	st := store.New(s.config.Store)
 	if err := st.Open(); err != nil {
 		return err

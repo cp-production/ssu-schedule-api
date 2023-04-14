@@ -5,13 +5,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
 type Store struct {
 	config *Config
-	db *sql.DB
+	db     *sql.DB
 }
 
-func New(config *Config) *Store{
+func New(config *Config) *Store {
 	return &Store{
 		config: config,
 	}
@@ -22,7 +21,7 @@ func (s *Store) Open() error {
 	if err != nil {
 		return err
 	}
-	if err:= db.Ping(); err != nil {
+	if err := db.Ping(); err != nil {
 		return err
 	}
 
