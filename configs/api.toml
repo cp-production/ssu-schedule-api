@@ -1,1 +1,4 @@
 bind_addr ="0.0.0.0:8080"
+
+[store]
+database_url = "host=localhost dbname=ssu_schedule_db sslmode=disable"
