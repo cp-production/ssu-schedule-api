@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS studentsSchedule;
+DROP TABLE IF EXISTS subgroups;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS teachers;
+DROP TABLE IF EXISTS departments;
