@@ -1,4 +1,5 @@
-bind_addr ="0.0.0.0:8080"
+bind_addr = ":8080"
+log_level = "debug"
 
 [store]
-database_url = "host=localhost dbname=ssu_schedule_db sslmode=disable"
+database_url = "postgres://username:password@0.0.0.0:5432/ssu-schedule-db?sslmode=disable"
