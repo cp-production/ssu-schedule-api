@@ -7,6 +7,7 @@ type StudentsScheduleRepo struct {
 }
 
 func (r *StudentsScheduleRepo) Insert(s *model.StudentsSchedule) error {
+
 	query := "INSERT INTO studentsSchedule VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
 	if _, err := r.store.db.Exec(query, s.DayNum, s.GroupId, s.LessonName,
 		s.LessonPlace, s.LessonType, s.SubgroupName,
@@ -21,7 +22,7 @@ func (r *StudentsScheduleRepo) Select() (*model.StudentsSchedule, error) {
 }
 
 func (r *StudentsScheduleRepo) Delete() error {
-	query := "TRUNCATE TABLE studentsSchedule"
+	query := "TRUNCATE TABLE studentsSchedule RESTART IDENTITY"
 	if _, err := r.store.db.Exec(query); err != nil {
 		return err
 	}

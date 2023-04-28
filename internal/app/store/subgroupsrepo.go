@@ -14,12 +14,19 @@ func (r *SubgroupsRepo) Insert(s *model.Subgroups) error {
 	return nil
 }
 
-func (r *SubgroupsRepo) Select() (*model.Subgroups, error) {
-	return nil, nil
+func (r *SubgroupsRepo) SelectByGroup(query_id string) (*model.Subgroups, error) {
+	query := "SELECT * FROM subgroups WHERE group_id = $1"
+	row := r.store.db.QueryRow(query, query_id)
+
+	sub := &model.Subgroups{}
+	if err := row.Scan(&sub.SubgroupName); err != nil {
+		return nil, err
+	}
+	return sub, nil
 }
 
 func (r *SubgroupsRepo) Delete() error {
-	query := "TRUNCATE TABLE subgroups"
+	query := "TRUNCATE TABLE subgroups RESTART IDENTITY"
 	if _, err := r.store.db.Exec(query); err != nil {
 		return err
 	}

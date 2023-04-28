@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -59,6 +60,10 @@ func (s *Server) configureStore() error {
 	}
 
 	s.store = st
+	err := parser.ParseDepartments(s.store)
+	if err != nil {
+		//логер
+	}
 
 	return nil
 }

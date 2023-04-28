@@ -13,9 +13,8 @@ func main() {
 	if _, err := toml.DecodeFile(configPath, config); err != nil {
 		log.Fatal(err)
 	}
-    
 	s := api.New(config)
 	if err := s.Start(); err != nil {
 		log.Fatal(err)
-    }
+	}
 }

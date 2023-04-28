@@ -1,8 +1,7 @@
 CREATE TABLE departments (
     id SERIAL PRIMARY KEY,
     url varchar not null,
-    fullName varchar not null,
-    shortName varchar not null
+    fullName varchar not null
 );
 
 CREATE TABLE groups (
@@ -25,7 +24,7 @@ CREATE TABLE teachers (
 
 CREATE TABLE studentsSchedule (
     id SERIAL PRIMARY KEY,
-    group_id SERIAL not null,
+    group_id int not null,
     dayNum varchar not null, 
     weekType varchar not null, 
     lessonType varchar not null,
@@ -35,6 +34,16 @@ CREATE TABLE studentsSchedule (
     subgroupName varchar not null    
 );
 
+CREATE TABLE teachersSchedule (
+    id SERIAL PRIMARY KEY,
+    dayNum varchar not null,
+    weekType varchar not null,
+    lessonType varchar not null,
+    lessonName varchar not null,
+    groupNum varchar not null,
+    lessonPlace varchar not null,
+    subgroupName varchar not null
+)
 ALTER TABLE groups
 ADD CONSTRAINT groups_dep_id_fkey
 FOREIGN KEY (dep_id)

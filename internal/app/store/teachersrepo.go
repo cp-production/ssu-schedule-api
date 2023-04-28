@@ -11,7 +11,7 @@ func (r *TeachersRepo) Insert(t *model.Teachers) error {
 	if _, err := r.store.db.Exec(query, t.FullName); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -28,12 +28,12 @@ func (r *TeachersRepo) SelectAll() (*[]model.Teachers, error) {
 		}
 		teachersArray = append(teachersArray, *t)
 	}
-	
+
 	return &teachersArray, nil
 }
 
 func (r *TeachersRepo) Delete() error {
-	query := "TRUNCATE TABLE teachers"
+	query := "TRUNCATE TABLE teachers RESTART IDENTITY"
 	if _, err := r.store.db.Exec(query); err != nil {
 		return err
 	}

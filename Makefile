@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	@go build ./cmd/api
+	@go build -v ./cmd/api
 clean:
 	@rm ./api
 

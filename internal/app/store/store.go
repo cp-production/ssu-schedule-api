@@ -52,8 +52,7 @@ func (s *Store) Departments() *DepartmentsRepo {
 	}
 
 	s.departmentsRepo = &DepartmentsRepo{
-		store: s,
-	}
+		store: s,	}
 	return s.departmentsRepo
 }
 
