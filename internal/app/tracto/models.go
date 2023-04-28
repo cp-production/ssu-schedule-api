@@ -19,14 +19,14 @@ type teacher struct {
 	Patronymic string `json:"patronymic"`
 }
 
-type lessons []struct {
+type Lessons []struct {
 	Id               int          `json:"id"`
 	Name             string       `json:"name"`
 	Place            string       `json:"place"`
 	Department       Department   `json:"department"`
 	StudentGroup     studentGroup `json:"studentGroup"`
 	SubGroup         string       `json:"subGroup"`
-	Day              day          `json:"day"`
+	Day              Day          `json:"day"`
 	LessonTime       lessonTime   `json:"lessonTime"`
 	Teacher          teacher      `json:"teacher"`
 	WeekType         string       `json:"weekType"`
@@ -58,7 +58,7 @@ type studentGroup struct {
 	GroupType      string     `json:"groupType"`
 }
 
-type day struct {
+type Day struct {
 	Id        int    `json:"id"`
 	DayNumber int    `json:"dayNumber"`
 	WeekDay   string `json:"weekDay"`
@@ -71,8 +71,8 @@ type weekShift struct {
 }
 
 type Schedule struct {
-	Lessons      lessons      `json:"lessons"`
+	Lessons      Lessons      `json:"lessons"`
 	StudentGroup studentGroup `json:"studentGroup"`
-	Day          day          `json:"day"`
+	Day          Day          `json:"day"`
 	WeekShift    weekShift    `json:"weekShift"`
 }

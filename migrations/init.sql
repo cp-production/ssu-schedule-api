@@ -8,7 +8,7 @@ CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     edForm varchar not null,
     groupNum varchar not null,
-    dep_id SERIAL not null
+    dep_id int not null
 );
 
 CREATE TABLE subgroups (
