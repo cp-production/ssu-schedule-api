@@ -37,9 +37,9 @@ func GetDepartmentList() ([][]string, error) {
 	return departmentsList, err
 }
 
-func GetGroupList(departmentID string) ([][]string, error) {
+func GetGroupList(dep_url string) ([][]string, error) {
 	groupList := make([][]string, 0)
-	response, err := http.Get(fmt.Sprintf("%s/%s", SsuUri, departmentID))
+	response, err := http.Get(fmt.Sprintf("%s/%s", SsuUri, dep_url))
 
 	if err != nil && response.StatusCode != http.StatusOK {
 		return groupList, err
@@ -54,7 +54,7 @@ func GetGroupList(departmentID string) ([][]string, error) {
 
 	re := regexp.MustCompile(`(?s)<div class="fieldset-wrapper">(.+?)</div>`)
 	values := re.FindAllStringSubmatch(string(body), -1)
-	reNumOfGroup := regexp.MustCompile(fmt.Sprintf(`%s/(\w+)/(\d+)`, departmentID))
+	reNumOfGroup := regexp.MustCompile(fmt.Sprintf(`%s/(\w+)/(\d+)`, dep_url))
 	for _, rows := range values {
 		curGroup := reNumOfGroup.FindAllStringSubmatch(rows[0], -1)
 		for _, val := range curGroup {
@@ -85,4 +85,3 @@ func GetSchedule(educationForm string, department string, studentGroup string) S
 
 	return schedule
 }
-

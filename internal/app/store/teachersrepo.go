@@ -7,7 +7,7 @@ type TeachersRepo struct {
 }
 
 func (r *TeachersRepo) Insert(t *model.Teachers) error {
-	query := "INSERT INTO departments VALUES ($1)"
+	query := "INSERT INTO teachers VALUES (DEFAULT, $1)"
 	if _, err := r.store.db.Exec(query, t.FullName); err != nil {
 		return err
 	}
