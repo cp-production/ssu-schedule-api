@@ -192,7 +192,7 @@ func ParseSubgroups(s *store.Store) error {
 	}
 
 	subgroupsRepo := s.Subgroups()
-	for subgroup, _ := range subgroupSet {
+	for subgroup := range subgroupSet {
 		err := subgroupsRepo.Insert(&subgroup)
 		if err != nil {
 			return err
