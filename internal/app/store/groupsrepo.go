@@ -17,10 +17,9 @@ func (r *GroupsRepo) Insert(g *model.Groups) error {
 	return nil
 }
 
-// TODO: add ed-from
-func (r *GroupsRepo) SelectByDepartments(query_id string) (*[]model.Groups, error) {
-	query := "SELECT * FROM groups WHERE dep_id = $1"
-	rows, err := r.store.db.Query(query, query_id)
+func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]model.Groups, error) {
+	query := "SELECT * FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2)"
+	rows, err := r.store.db.Query(query, ed_form, dep_url)
 
 	if err != nil {
 		return nil, err

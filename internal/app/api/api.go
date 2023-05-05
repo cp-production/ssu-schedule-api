@@ -53,7 +53,7 @@ func (s *Server) configureLogger() error {
 
 func (s *Server) configureRouter() {
 	s.router.HandleFunc(("/api/v1.0/departments"), s.handleDepartments())
-	s.router.HandleFunc(("/api/v1.0/{dep_id}/groups"), s.handleGroups())
+	s.router.HandleFunc(("/api/v1.0/{ed_form}/{dep_url}/groups"), s.handleGroups())
 }
 
 func (s *Server) configureStore() error {
@@ -82,22 +82,22 @@ func (s *Server) handleDepartments() http.HandlerFunc {
 }
 
 func (s *Server) handleGroups() http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        vars := mux.Vars(r)
-        departmentID := vars["dep_id"]
-        d, err := s.store.Groups().SelectByDepartments(departmentID)
-        if err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
-        if d == nil {
-            http.Error(w, "Group not found", http.StatusNotFound)
-            return
-        }
-        s.respond(w, http.StatusOK, *d)
-    }
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		educationForm := vars["ed_form"]
+		departmentUrl := vars["dep_url"]
+		d, err := s.store.Groups().SelectByDepartments(educationForm, departmentUrl)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if d == nil {
+			http.Error(w, "Group not found", http.StatusNotFound)
+			return
+		}
+		s.respond(w, http.StatusOK, *d)
+	}
 }
-
 
 func (s *Server) respond(w http.ResponseWriter, code int, data interface{}) {
 	w.WriteHeader(code)
