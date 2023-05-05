@@ -43,11 +43,8 @@ type Department struct {
 	Url       string `json:"url"`
 }
 
-type Departments []struct {
-	Id        int    `json:"id"`
-	FullName  string `json:"fullName"`
-	ShortName string `json:"shortName"`
-	Url       string `json:"url"`
+type Departments struct {
+	DepartmentsList []Department
 }
 type studentGroup struct {
 	Id             int        `json:"id"`

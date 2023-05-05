@@ -8,33 +8,21 @@ import (
 	"regexp"
 )
 
-func GetDepartmentList() ([][]string, error) {
-	departmentsList := make([][]string, 0)
-	response, err := http.Get(SsuUri)
-
-	if err != nil && response.StatusCode != http.StatusOK {
-		return departmentsList, err
+func GetDepartmentList() (Departments, error) {
+	response, err := http.Get(fmt.Sprintf("%s/departments", TractoUri))
+	if err != nil {
+		panic(err)
 	}
 	defer response.Body.Close()
 
-	body, err := io.ReadAll(response.Body)
-
+	departmentsList := Departments{}
+	err = json.NewDecoder(response.Body).Decode(&departmentsList)
 	if err != nil {
-		return departmentsList, err
+		panic(err)
 	}
 
-	re := regexp.MustCompile(`(?s)<div class="panes_item panes_item__type_group">(.+?)</div>`)
-	values := re.FindStringSubmatch(string(body))
+	return departmentsList, nil
 
-	subUL := regexp.MustCompile(`<li><a href='\/schedule\/(.*?)'>(.+?)<\/a><\/li>`)
-	liValues := subUL.FindAllStringSubmatch(values[1], -1)
-
-	for _, lv := range liValues {
-		href := lv[1]
-		facultyName := lv[2]
-		departmentsList = append(departmentsList, []string{href, facultyName})
-	}
-	return departmentsList, err
 }
 
 func GetGroupList(dep_url string) ([][]string, error) {
@@ -62,7 +50,7 @@ func GetGroupList(dep_url string) ([][]string, error) {
 		}
 	}
 
-	return groupList, err
+	return groupList, nil
 }
 
 func GetSchedule(educationForm string, department string, studentGroup string) Schedule {

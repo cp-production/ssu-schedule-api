@@ -33,7 +33,6 @@ func ParseAll(s *store.Store) error {
 	if err != nil {
 		return err
 	}
-
 	for _, d := range *departments {
 		start := time.Now()
 		groups, err := ParseGroups(s, d.Url, d.Id)
@@ -60,8 +59,8 @@ func ParseDepartments(s *store.Store) (*[]model.Departments, error) {
 	}
 
 	departmentsRepo := s.Departments()
-	for i, rows := range depList {
-		department := model.Departments{Id: i, Url: rows[0], FullName: rows[1]}
+	for i, rows := range depList.DepartmentsList {
+		department := model.Departments{Id: i, ShortName: rows.ShortName, FullName: rows.FullName, Url: rows.Url}
 		err := departmentsRepo.Insert(&department)
 		if err != nil {
 			return nil, err
