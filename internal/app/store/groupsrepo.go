@@ -18,15 +18,23 @@ func (r *GroupsRepo) Insert(g *model.Groups) error {
 }
 
 // TODO: add ed-from
-func (r *GroupsRepo) SelectByDepartments(query_id string) (*model.Groups, error) {
+func (r *GroupsRepo) SelectByDepartments(query_id string) (*[]model.Groups, error) {
 	query := "SELECT * FROM groups WHERE dep_id = $1"
-	row := r.store.db.QueryRow(query, query_id)
+	rows, err := r.store.db.Query(query, query_id)
 
-	group := &model.Groups{}
-	if err := row.Scan(&group.EdForm, &group.GroupNum); err != nil {
+	if err != nil {
 		return nil, err
 	}
-	return group, nil
+
+	var groups []model.Groups
+	for rows.Next() {
+		group := &model.Groups{}
+		if err := rows.Scan(&group.Id, &group.EdForm, &group.GroupNum, &group.DepId); err != nil {
+			return nil, err
+		}
+		groups = append(groups, *group)
+	}
+	return &groups, nil
 }
 
 func (r *GroupsRepo) SelectId(edForm string, groupNum string, url string) (int, error) {

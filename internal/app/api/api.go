@@ -1,11 +1,12 @@
 package api
 
 import (
-	"io"
+	"encoding/json"
 	"net/http"
 	"time"
 
-	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
+	// "github.com/cp-production/ssu-schedule-api/internal/app/parser"
+
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -27,8 +28,6 @@ func New(config *Config) *Server {
 }
 
 func (s *Server) Start() error {
-	s.configureRouter()
-
 	if err := s.configureLogger(); err != nil {
 		return err
 	}
@@ -36,6 +35,8 @@ func (s *Server) Start() error {
 	if err := s.configureStore(); err != nil {
 		return err
 	}
+
+	s.configureRouter()
 
 	s.Logger.Info("Server is listening")
 	return http.ListenAndServe(s.config.BindAddr, s.router)
@@ -51,7 +52,8 @@ func (s *Server) configureLogger() error {
 }
 
 func (s *Server) configureRouter() {
-	s.router.HandleFunc(("/hello"), s.handlerHello())
+	s.router.HandleFunc(("/api/v1.0/departments"), s.handleDepartments())
+	s.router.HandleFunc(("/api/v1.0/{dep_id}/groups"), s.handleGroups())
 }
 
 func (s *Server) configureStore() error {
@@ -62,17 +64,46 @@ func (s *Server) configureStore() error {
 
 	s.store = st
 	start := time.Now()
-	err := parser.ParseAll(s.store)
-	if err != nil {
-		return err
-	}
+	// err := parser.ParseAll(s.store)
+	// if err != nil {
+	// 	return err
+	// }
 	s.Logger.Info("Parsed SSU Schedule in ", time.Since(start))
 
 	return nil
 }
 
-func (s *Server) handlerHello() http.HandlerFunc {
+func (s *Server) handleDepartments() http.HandlerFunc {
+	d, _ := s.store.Departments().SelectAll()
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "hello")
+		s.respond(w, http.StatusOK, *d)
+	}
+}
+
+func (s *Server) handleGroups() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        vars := mux.Vars(r)
+        departmentID := vars["dep_id"]
+        d, err := s.store.Groups().SelectByDepartments(departmentID)
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        if d == nil {
+            http.Error(w, "Group not found", http.StatusNotFound)
+            return
+        }
+        s.respond(w, http.StatusOK, *d)
+    }
+}
+
+
+func (s *Server) respond(w http.ResponseWriter, code int, data interface{}) {
+	w.WriteHeader(code)
+	if data != nil {
+		if err := json.NewEncoder(w).Encode(data); err != nil {
+			s.Logger.Info("ERROR")
+		}
 	}
 }
