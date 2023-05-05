@@ -38,6 +38,26 @@ func (r *StudentsScheduleRepo) Select(educationForm string, departmentUrl string
 	return &lessons, nil
 }
 
+func (r *StudentsScheduleRepo) SelectAll() (*[]model.StudentsLesson, error) {
+
+	query := "SELECT * FROM studentsschedule"
+	rows, err := r.store.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	var lessons []model.StudentsLesson
+	for rows.Next() {
+		lesson := &model.StudentsLesson{}
+		// TODO: Change this
+		var id int
+		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
+			return nil, err
+		}
+		lessons = append(lessons, *lesson)
+	}
+	return &lessons, nil
+}
+
 func (r *StudentsScheduleRepo) Delete() error {
 	query := "TRUNCATE TABLE studentsSchedule RESTART IDENTITY"
 	if _, err := r.store.db.Exec(query); err != nil {

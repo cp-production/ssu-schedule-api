@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	// "github.com/cp-production/ssu-schedule-api/internal/app/parser"
+	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
 
 	_ "github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
@@ -68,10 +68,10 @@ func (s *Server) configureStore() error {
 
 	s.store = st
 	start := time.Now()
-	// err := parser.ParseAll(s.store)
-	// if err != nil {
-	// 	return err
-	// }
+	err := parser.ParseAll(s.store)
+	if err != nil {
+		return err
+	}
 	s.Logger.Info("Parsed SSU Schedule in ", time.Since(start))
 
 	return nil
