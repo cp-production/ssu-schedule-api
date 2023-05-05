@@ -14,15 +14,25 @@ func (r *SubgroupsRepo) Insert(s *model.Subgroups) error {
 	return nil
 }
 
-func (r *SubgroupsRepo) SelectByGroup(query_id string) (*model.Subgroups, error) {
-	query := "SELECT * FROM subgroups WHERE group_id = $1"
-	row := r.store.db.QueryRow(query, query_id)
-
-	sub := &model.Subgroups{}
-	if err := row.Scan(&sub.SubgroupName); err != nil {
+func (r *SubgroupsRepo) SelectByGroup(education_form string, department_url string, group_num string) (*[]model.Subgroups, error) {
+	query := "SELECT * FROM subgroups WHERE group_id = (SELECT id FROM groups WHERE edForm = $1 AND groupNum = $2 AND dep_id = (SELECT id FROM departments WHERE url = $3))"
+	rows, err := r.store.db.Query(query, education_form, group_num, department_url)
+	if err != nil {
 		return nil, err
 	}
-	return sub, nil
+
+	var subgroupsArray []model.Subgroups
+	for rows.Next() {
+		subgroup := &model.Subgroups{}
+		// TODO: Change this
+		var i int
+		if err := rows.Scan(&i, &subgroup.SubgroupName, &subgroup.GroupId); err != nil {
+			return nil, err
+		}
+		subgroupsArray = append(subgroupsArray, *subgroup)
+	}
+
+	return &subgroupsArray, nil
 }
 
 func (r *SubgroupsRepo) Delete() error {

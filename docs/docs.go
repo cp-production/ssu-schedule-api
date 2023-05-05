@@ -132,6 +132,56 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/{education_form}/{department}/{group_number}/subgroups": {
+            "get": {
+                "description": "Retrieves the subgroups list of a group based on department, education form and group number",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "groups"
+                ],
+                "summary": "get a list of subgroups of a certain group",
+                "operationId": "get-group-subgroups",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Education form, e.g. ` + "`" + `do` + "`" + `",
+                        "name": "education_form",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Department URL, e.g. ` + "`" + `knt` + "`" + ` for CSIT department",
+                        "name": "department",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group number, e.g. ` + "`" + `351` + "`" + `",
+                        "name": "group_number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Subgroups"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -194,6 +244,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "weekType": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Subgroups": {
+            "type": "object",
+            "properties": {
+                "groupId": {
+                    "type": "integer"
+                },
+                "subgroupName": {
                     "type": "string"
                 }
             }

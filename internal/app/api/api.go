@@ -58,6 +58,7 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/api/v1.0/departments", s.handleDepartments())
 	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/groups", s.handleGroups())
 	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/{group_num}", s.handleStudentsSchedule())
+	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/{group_num}/subgroups", s.handleSubgroups())
 }
 
 func (s *Server) configureStore() error {
@@ -138,6 +139,36 @@ func (s *Server) handleStudentsSchedule() http.HandlerFunc {
 		departmentUrl := vars["dep_url"]
 		groupNum := vars["group_num"]
 		l, err := s.store.StudentsSchedule().Select(educationForm, departmentUrl, groupNum)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if l == nil {
+			http.Error(w, "Group not found", http.StatusNotFound)
+			return
+		}
+		s.respond(w, http.StatusOK, *l)
+	}
+}
+
+// @Summary get a list of subgroups of a certain group
+// @Tags groups
+// @Description Retrieves the subgroups list of a group based on department, education form and group number
+// @ID get-group-subgroups
+// @Param education_form path string true "Education form, e.g. `do`"
+// @Param department path string true "Department URL, e.g. `knt` for CSIT department"
+// @Param group_number path string true "Group number, e.g. `351`"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.Subgroups
+// @Router /{education_form}/{department}/{group_number}/subgroups [get]
+func (s *Server) handleSubgroups() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		educationForm := vars["ed_form"]
+		departmentUrl := vars["dep_url"]
+		groupNum := vars["group_num"]
+		l, err := s.store.Subgroups().SelectByGroup(educationForm, departmentUrl, groupNum)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

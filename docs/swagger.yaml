@@ -41,6 +41,13 @@ definitions:
       weekType:
         type: string
     type: object
+  model.Subgroups:
+    properties:
+      groupId:
+        type: integer
+      subgroupName:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -83,6 +90,41 @@ paths:
       summary: get the schedule of students for a particular group
       tags:
       - schedule
+  /{education_form}/{department}/{group_number}/subgroups:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the subgroups list of a group based on department, education
+        form and group number
+      operationId: get-group-subgroups
+      parameters:
+      - description: Education form, e.g. `do`
+        in: path
+        name: education_form
+        required: true
+        type: string
+      - description: Department URL, e.g. `knt` for CSIT department
+        in: path
+        name: department
+        required: true
+        type: string
+      - description: Group number, e.g. `351`
+        in: path
+        name: group_number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Subgroups'
+            type: array
+      summary: get a list of subgroups of a certain group
+      tags:
+      - groups
   /{education_form}/{department}/groups:
     get:
       consumes:
