@@ -18,17 +18,15 @@ const docTemplate = `{
     "paths": {
         "/departments": {
             "get": {
-                "description": "get departments list",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Retrieves SSU departments' list",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "departments"
                 ],
-                "summary": "Retrieves SSU departments' list",
+                "summary": "get a list of departments",
+                "operationId": "get-departments-list",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -42,9 +40,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/{ed_form}/{dep_url}/groups": {
+        "/{education_form}/{department}/groups": {
             "get": {
-                "description": "get groups list",
+                "description": "Retrieves groups' list based on department and education form",
                 "consumes": [
                     "application/json"
                 ],
@@ -54,8 +52,24 @@ const docTemplate = `{
                 "tags": [
                     "groups"
                 ],
-                "summary": "Get groups",
-                "operationId": "create-account",
+                "summary": "get a list of groups of a certain department",
+                "operationId": "get-groups-list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Education form, e.g. ` + "`" + `do` + "`" + `",
+                        "name": "education_form",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Department URL, e.g. ` + "`" + `knt` + "`" + ` for CSIT department",
+                        "name": "department",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -63,6 +77,56 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/model.Groups"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{education_form}/{department}/{group_number}": {
+            "get": {
+                "description": "Retrieves the schedule based on department, education form and group number",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "get the schedule of students for a particular group",
+                "operationId": "get-students-schedule",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Education form, e.g. ` + "`" + `do` + "`" + `",
+                        "name": "education_form",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Department URL, e.g. ` + "`" + `knt` + "`" + ` for CSIT department",
+                        "name": "department",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group number, e.g. ` + "`" + `351` + "`" + `",
+                        "name": "group_number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.StudentsLesson"
                             }
                         }
                     }
@@ -102,6 +166,35 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.StudentsLesson": {
+            "type": "object",
+            "properties": {
+                "dayNum": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lessonName": {
+                    "type": "string"
+                },
+                "lessonPlace": {
+                    "type": "string"
+                },
+                "lessonType": {
+                    "type": "string"
+                },
+                "subgroupName": {
+                    "type": "string"
+                },
+                "teacher": {
+                    "type": "string"
+                },
+                "weekType": {
+                    "type": "string"
                 }
             }
         }

@@ -18,8 +18,24 @@ func (r *StudentsScheduleRepo) Insert(s *model.StudentsLesson) error {
 	return nil
 }
 
-func (r *StudentsScheduleRepo) Select() (*model.StudentsLesson, error) {
-	return nil, nil
+func (r *StudentsScheduleRepo) Select(educationForm string, departmentUrl string, groupNum string) (*[]model.StudentsLesson, error) {
+
+	query := "SELECT * FROM studentsschedule WHERE group_id = (SELECT group_id FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2) AND groupNum = $3)"
+	rows, err := r.store.db.Query(query, educationForm, departmentUrl, groupNum)
+	if err != nil {
+		return nil, err
+	}
+	var lessons []model.StudentsLesson
+	for rows.Next() {
+		lesson := &model.StudentsLesson{}
+		// TODO: Fix this
+		var id int
+		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
+			return nil, err
+		}
+		lessons = append(lessons, *lesson)
+	}
+	return &lessons, nil
 }
 
 func (r *StudentsScheduleRepo) Delete() error {

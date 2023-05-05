@@ -55,8 +55,9 @@ func (s *Server) configureLogger() error {
 
 func (s *Server) configureRouter() {
 	s.router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
-	s.router.HandleFunc(("/api/v1.0/departments"), s.handleDepartments())
-	s.router.HandleFunc(("/api/v1.0/{ed_form}/{dep_url}/groups"), s.handleGroups())
+	s.router.HandleFunc("/api/v1.0/departments", s.handleDepartments())
+	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/groups", s.handleGroups())
+	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/{group_num}", s.handleStudentsSchedule())
 }
 
 func (s *Server) configureStore() error {
@@ -76,10 +77,10 @@ func (s *Server) configureStore() error {
 	return nil
 }
 
-// @Summary Retrieves SSU departments' list
+// @Summary get a list of departments
+// @ID get-departments-list
 // @Tags departments
-// @Description get departments list
-// @Accept json
+// @Description Retrieves SSU departments' list
 // @Produce json
 // @Success 200 {array} model.Departments
 // @Router /departments [get]
@@ -91,14 +92,16 @@ func (s *Server) handleDepartments() http.HandlerFunc {
 	}
 }
 
-// @Summary Get groups
+// @Summary get a list of groups of a certain department
 // @Tags groups
-// @Description get groups list
-// @ID create-account
+// @Description Retrieves groups' list based on department and education form
+// @ID get-groups-list
+// @Param education_form path string true "Education form, e.g. `do`"
+// @Param department path string true "Department URL, e.g. `knt` for CSIT department"
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.Groups
-// @Router /{ed_form}/{dep_url}/groups [get]
+// @Router /{education_form}/{department}/groups [get]
 func (s *Server) handleGroups() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -114,6 +117,36 @@ func (s *Server) handleGroups() http.HandlerFunc {
 			return
 		}
 		s.respond(w, http.StatusOK, *d)
+	}
+}
+
+// @Summary get the schedule of students for a particular group
+// @Tags schedule
+// @Description Retrieves the schedule based on department, education form and group number
+// @ID get-students-schedule
+// @Param education_form path string true "Education form, e.g. `do`"
+// @Param department path string true "Department URL, e.g. `knt` for CSIT department"
+// @Param group_number path string true "Group number, e.g. `351`"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.StudentsLesson
+// @Router /{education_form}/{department}/{group_number} [get]
+func (s *Server) handleStudentsSchedule() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		educationForm := vars["ed_form"]
+		departmentUrl := vars["dep_url"]
+		groupNum := vars["group_num"]
+		l, err := s.store.StudentsSchedule().Select(educationForm, departmentUrl, groupNum)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if l == nil {
+			http.Error(w, "Group not found", http.StatusNotFound)
+			return
+		}
+		s.respond(w, http.StatusOK, *l)
 	}
 }
 

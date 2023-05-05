@@ -14,7 +14,6 @@ import (
 
 // @host      localhost:8080
 // @BasePath  /api/v1.0
-
 func main() {
 	configPath := "configs/api.toml"
 	config := api.NewConfig()

@@ -22,6 +22,25 @@ definitions:
       id:
         type: integer
     type: object
+  model.StudentsLesson:
+    properties:
+      dayNum:
+        type: integer
+      id:
+        type: integer
+      lessonName:
+        type: string
+      lessonPlace:
+        type: string
+      lessonType:
+        type: string
+      subgroupName:
+        type: string
+      teacher:
+        type: string
+      weekType:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -29,12 +48,58 @@ info:
   title: SSU Schedule API
   version: "1.0"
 paths:
-  /{ed_form}/{dep_url}/groups:
+  /{education_form}/{department}/{group_number}:
     get:
       consumes:
       - application/json
-      description: get groups list
-      operationId: create-account
+      description: Retrieves the schedule based on department, education form and
+        group number
+      operationId: get-students-schedule
+      parameters:
+      - description: Education form, e.g. `do`
+        in: path
+        name: education_form
+        required: true
+        type: string
+      - description: Department URL, e.g. `knt` for CSIT department
+        in: path
+        name: department
+        required: true
+        type: string
+      - description: Group number, e.g. `351`
+        in: path
+        name: group_number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.StudentsLesson'
+            type: array
+      summary: get the schedule of students for a particular group
+      tags:
+      - schedule
+  /{education_form}/{department}/groups:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves groups' list based on department and education form
+      operationId: get-groups-list
+      parameters:
+      - description: Education form, e.g. `do`
+        in: path
+        name: education_form
+        required: true
+        type: string
+      - description: Department URL, e.g. `knt` for CSIT department
+        in: path
+        name: department
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -44,14 +109,13 @@ paths:
             items:
               $ref: '#/definitions/model.Groups'
             type: array
-      summary: Get groups
+      summary: get a list of groups of a certain department
       tags:
       - groups
   /departments:
     get:
-      consumes:
-      - application/json
-      description: get departments list
+      description: Retrieves SSU departments' list
+      operationId: get-departments-list
       produces:
       - application/json
       responses:
@@ -61,7 +125,7 @@ paths:
             items:
               $ref: '#/definitions/model.Departments'
             type: array
-      summary: Retrieves SSU departments' list
+      summary: get a list of departments
       tags:
       - departments
 swagger: "2.0"

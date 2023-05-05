@@ -1,5 +1,5 @@
 package model
 
 type Teachers struct {
-	FullName string
+	FullName string `json:"fullName"`
 }

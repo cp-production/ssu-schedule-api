@@ -1,6 +1,6 @@
 package model
 
 type Subgroups struct {
-	SubgroupName string
-	GroupId int
+	SubgroupName string `json:"subgroupName"`
+	GroupId int `json:"groupId"`
 }
