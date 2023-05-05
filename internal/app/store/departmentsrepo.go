@@ -12,6 +12,7 @@ func (r *DepartmentsRepo) Insert(d *model.Departments) error {
 
 	query := "INSERT INTO departments VALUES (DEFAULT, $1, $2, $3)"
 	if _, err := r.store.db.Exec(query, d.FullName, d.ShortName, d.Url); err != nil {
+
 		return err
 	}
 
@@ -27,6 +28,7 @@ func (r *DepartmentsRepo) SelectAll() (*[]model.Departments, error) {
 	for rows.Next() {
 		dep := &model.Departments{}
 		if err := rows.Scan(&dep.Id, &dep.FullName, &dep.ShortName, &dep.Url); err != nil {
+
 			return nil, err
 		}
 		departmentsArray = append(departmentsArray, *dep)

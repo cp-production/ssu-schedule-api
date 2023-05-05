@@ -28,7 +28,6 @@ func ParseAll(s *store.Store) error {
 	if err := ClearDB(s); err != nil {
 		return err
 	}
-
 	departments, err := ParseDepartments(s)
 	if err != nil {
 		return err
@@ -66,6 +65,7 @@ func ParseDepartments(s *store.Store) (*[]model.Departments, error) {
 			return nil, err
 		}
 	}
+
 
 	processedDepartments, err := departmentsRepo.SelectAll()
 	if err != nil {
