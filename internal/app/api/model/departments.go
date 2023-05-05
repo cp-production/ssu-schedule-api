@@ -1,8 +1,8 @@
 package model
 
 type Departments struct {
-	Id        int
-	FullName  string
-	ShortName string
-	Url       string
+	Id        int    `json:"id"`
+	FullName  string `json:"fullName"`
+	ShortName string `json:"shortName"`
+	Url       string `json:"url"`
 }

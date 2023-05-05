@@ -1,0 +1,67 @@
+basePath: /api/v1.0
+definitions:
+  model.Departments:
+    properties:
+      fullName:
+        type: string
+      id:
+        type: integer
+      shortName:
+        type: string
+      url:
+        type: string
+    type: object
+  model.Groups:
+    properties:
+      depId:
+        type: integer
+      edForm:
+        type: string
+      groupNum:
+        type: string
+      id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Server for SSU Schedule Application
+  title: SSU Schedule API
+  version: "1.0"
+paths:
+  /{ed_form}/{dep_url}/groups:
+    get:
+      consumes:
+      - application/json
+      description: get groups list
+      operationId: create-account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Groups'
+            type: array
+      summary: Get groups
+      tags:
+      - groups
+  /departments:
+    get:
+      consumes:
+      - application/json
+      description: get departments list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Departments'
+            type: array
+      summary: Retrieves SSU departments' list
+      tags:
+      - departments
+swagger: "2.0"

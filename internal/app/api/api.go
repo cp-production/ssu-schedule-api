@@ -7,9 +7,11 @@ import (
 
 	// "github.com/cp-production/ssu-schedule-api/internal/app/parser"
 
+	_ "github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type Server struct {
@@ -52,6 +54,7 @@ func (s *Server) configureLogger() error {
 }
 
 func (s *Server) configureRouter() {
+	s.router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	s.router.HandleFunc(("/api/v1.0/departments"), s.handleDepartments())
 	s.router.HandleFunc(("/api/v1.0/{ed_form}/{dep_url}/groups"), s.handleGroups())
 }
@@ -73,6 +76,13 @@ func (s *Server) configureStore() error {
 	return nil
 }
 
+// @Summary Retrieves SSU departments' list
+// @Tags departments
+// @Description get departments list
+// @Accept json
+// @Produce json
+// @Success 200 {array} model.Departments
+// @Router /departments [get]
 func (s *Server) handleDepartments() http.HandlerFunc {
 	d, _ := s.store.Departments().SelectAll()
 
@@ -81,6 +91,14 @@ func (s *Server) handleDepartments() http.HandlerFunc {
 	}
 }
 
+// @Summary Get groups
+// @Tags groups
+// @Description get groups list
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.Groups
+// @Router /{ed_form}/{dep_url}/groups [get]
 func (s *Server) handleGroups() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -100,6 +118,7 @@ func (s *Server) handleGroups() http.HandlerFunc {
 }
 
 func (s *Server) respond(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	if data != nil {
 		if err := json.NewEncoder(w).Encode(data); err != nil {
