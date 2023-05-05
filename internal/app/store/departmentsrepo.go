@@ -10,8 +10,9 @@ type DepartmentsRepo struct {
 
 func (r *DepartmentsRepo) Insert(d *model.Departments) error {
 
-	query := "INSERT INTO departments VALUES (DEFAULT, $1, $2)"
-	if _, err := r.store.db.Exec(query, d.Url, d.FullName); err != nil {
+	query := "INSERT INTO departments VALUES (DEFAULT, $1, $2, $3)"
+	if _, err := r.store.db.Exec(query, d.FullName, d.ShortName, d.Url); err != nil {
+
 		return err
 	}
 
@@ -26,7 +27,8 @@ func (r *DepartmentsRepo) SelectAll() (*[]model.Departments, error) {
 	var departmentsArray []model.Departments
 	for rows.Next() {
 		dep := &model.Departments{}
-		if err := rows.Scan(&dep.Id, &dep.Url, &dep.FullName); err != nil {
+		if err := rows.Scan(&dep.Id, &dep.FullName, &dep.ShortName, &dep.Url); err != nil {
+
 			return nil, err
 		}
 		departmentsArray = append(departmentsArray, *dep)
@@ -40,7 +42,7 @@ func (r *DepartmentsRepo) SelectById(query_id string) (*model.Departments, error
 	row := r.store.db.QueryRow(query, query_id)
 
 	dep := &model.Departments{}
-	if err := row.Scan(&dep.Url, &dep.FullName); err != nil {
+	if err := row.Scan(&dep.FullName, &dep.ShortName, &dep.Url); err != nil {
 		return nil, err
 	}
 	return dep, nil

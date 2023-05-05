@@ -1,7 +1,8 @@
 CREATE TABLE departments (
     id SERIAL PRIMARY KEY,
-    url varchar not null,
-    fullName varchar not null
+    fullName varchar not null,
+    shortName varchar not null,
+    url varchar not null
 );
 
 CREATE TABLE groups (
