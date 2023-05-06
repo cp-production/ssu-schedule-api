@@ -1,6 +1,8 @@
 package store
 
 import (
+	"database/sql"
+
 	"github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 )
 
@@ -20,7 +22,6 @@ func (r *GroupsRepo) Insert(g *model.Groups) error {
 func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]model.Groups, error) {
 	query := "SELECT * FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2)"
 	rows, err := r.store.db.Query(query, ed_form, dep_url)
-
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +30,9 @@ func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]mod
 	for rows.Next() {
 		group := &model.Groups{}
 		if err := rows.Scan(&group.Id, &group.EdForm, &group.GroupNum, &group.DepId); err != nil {
+			if err == sql.ErrNoRows {
+				return nil, err
+			}
 			return nil, err
 		}
 		groups = append(groups, *group)
