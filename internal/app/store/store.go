@@ -52,7 +52,7 @@ func (s *Store) Departments() *DepartmentsRepo {
 	}
 
 	s.departmentsRepo = &DepartmentsRepo{
-		store: s,	}
+		store: s}
 	return s.departmentsRepo
 }
 
@@ -98,4 +98,8 @@ func (s *Store) Teachers() *TeachersRepo {
 		store: s,
 	}
 	return s.teachersRepo
+}
+
+func (s *Store) DB() *sql.DB {
+	return s.db
 }

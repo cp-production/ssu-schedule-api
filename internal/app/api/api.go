@@ -1,78 +1,68 @@
 package api
 
 import (
-	"io"
 	"net/http"
 	"time"
 
 	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
+
+	_ "github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
-	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
-type Server struct {
-	config *Config
-	Logger *logrus.Logger
-	router *mux.Router
-	store  *store.Store
-}
-
-func New(config *Config) *Server {
-	return &Server{
-		config: config,
-		Logger: logrus.New(),
-		router: mux.NewRouter(),
-	}
-}
-
-func (s *Server) Start() error {
-	s.configureRouter()
-
-	if err := s.configureLogger(); err != nil {
+func Start(config *Config) error {
+	logger := logrus.New()
+	if err := configureLogger(config, logger); err != nil {
 		return err
 	}
-
-	if err := s.configureStore(); err != nil {
-		return err
-	}
-
-	s.Logger.Info("Server is listening")
-	return http.ListenAndServe(s.config.BindAddr, s.router)
-}
-
-func (s *Server) configureLogger() error {
-	level, err := logrus.ParseLevel(s.config.LogLevel)
+	store, err := configureStore(config, logger)
 	if err != nil {
 		return err
 	}
-	s.Logger.SetLevel(level)
+	srv := newServer(logger, store)
+
+	logger.Info("Server is listening")
+	return http.ListenAndServe(config.BindAddr, srv)
+}
+
+func configureLogger(config *Config, logger *logrus.Logger) error {
+	level, err := logrus.ParseLevel(config.LogLevel)
+	if err != nil {
+		return err
+	}
+	logger.SetLevel(level)
 	return nil
 }
 
-func (s *Server) configureRouter() {
-	s.router.HandleFunc(("/hello"), s.handlerHello())
-}
-
-func (s *Server) configureStore() error {
-	st := store.New(s.config.Store)
+func configureStore(config *Config, logger *logrus.Logger) (*store.Store, error) {
+	st := store.New(config.Store)
 	if err := st.Open(); err != nil {
-		return err
+		return nil, err
 	}
 
-	s.store = st
 	start := time.Now()
-	err := parser.ParseAll(s.store)
+	err := parser.ParseAll(st)
 	if err != nil {
-		return err
+		logger.Info("Parsed SSU Schedule is failed ", time.Since(start))
 	}
-	s.Logger.Info("Parsed SSU Schedule in ", time.Since(start))
+	logger.Info("Parsed SSU Schedule in ", time.Since(start))
 
-	return nil
-}
+	go func() {
+		ticker := time.NewTicker(24 * time.Hour)
 
-func (s *Server) handlerHello() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "hello")
-	}
+		for {
+			select {
+			case <-ticker.C:
+				start := time.Now()
+				err := parser.ParseAll(st)
+				if err != nil {
+					logger.Info("Parsed SSU Schedule is failed ", time.Since(start))
+				}
+				logger.Info("Parsed SSU Schedule in ", time.Since(start))
+			}
+		}
+	}()
+
+	return st, nil
 }
