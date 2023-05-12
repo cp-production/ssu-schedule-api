@@ -34,7 +34,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) configureRouter() {
 	s.router.Use(s.logRequest)
- 	s.router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	s.router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
 	s.router.HandleFunc("/api/v1.0/departments", s.handleDepartments())
 	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/groups", s.handleGroups())
 	s.router.HandleFunc("/api/v1.0/{ed_form}/{dep_url}/{group_num}", s.handleStudentsSchedule())
@@ -73,6 +74,10 @@ func (s *server) logRequest(next http.Handler) http.Handler {
 
 func (s *server) respond(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	w.WriteHeader(code)
 	if data != nil {
 		json.NewEncoder(w).Encode(data)

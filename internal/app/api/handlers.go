@@ -30,6 +30,7 @@ func (s *server) handleDepartments() http.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.Groups
+//
 // @Router /{education_form}/{department}/groups [get]
 func (s *server) handleGroups() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

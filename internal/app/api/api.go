@@ -7,6 +7,7 @@ import (
 	// "github.com/cp-production/ssu-schedule-api/internal/app/parser"
 
 	_ "github.com/cp-production/ssu-schedule-api/internal/app/api/model"
+	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
 	"github.com/cp-production/ssu-schedule-api/internal/app/store"
 	"github.com/sirupsen/logrus"
 )
@@ -42,11 +43,27 @@ func configureStore(config *Config, logger *logrus.Logger) (*store.Store, error)
 	}
 
 	start := time.Now()
-	// err := parser.ParseAll(st)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err := parser.ParseAll(st)
+	if err != nil {
+		logger.Info("Parsed SSU Schedule is failed ", time.Since(start))
+	}
 	logger.Info("Parsed SSU Schedule in ", time.Since(start))
 
-	return st, nil 
+	go func() {
+		ticker := time.NewTicker(24 * time.Hour)
+
+		for {
+			select {
+			case <-ticker.C:
+				start := time.Now()
+				err := parser.ParseAll(st)
+				if err != nil {
+					logger.Info("Parsed SSU Schedule is failed ", time.Since(start))
+				}
+				logger.Info("Parsed SSU Schedule in ", time.Since(start))
+			}
+		}
+	}()
+
+	return st, nil
 }
