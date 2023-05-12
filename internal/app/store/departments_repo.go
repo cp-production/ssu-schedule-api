@@ -9,9 +9,8 @@ type DepartmentsRepo struct {
 }
 
 func (r *DepartmentsRepo) Insert(d *model.Departments) error {
-
 	query := "INSERT INTO departments VALUES (DEFAULT, $1, $2, $3)"
-	if _, err := r.store.db.Exec(query, d.FullName, d.ShortName, d.Url); err != nil {
+	if _, err := r.store.DB().Exec(query, d.FullName, d.ShortName, d.Url); err != nil {
 
 		return err
 	}
@@ -20,7 +19,7 @@ func (r *DepartmentsRepo) Insert(d *model.Departments) error {
 }
 
 func (r *DepartmentsRepo) SelectAll() (*[]model.Departments, error) {
-	rows, err := r.store.db.Query("SELECT * FROM departments")
+	rows, err := r.store.DB().Query("SELECT * FROM departments")
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +38,7 @@ func (r *DepartmentsRepo) SelectAll() (*[]model.Departments, error) {
 
 func (r *DepartmentsRepo) SelectById(query_id string) (*model.Departments, error) {
 	query := "SELECT * FROM departments WHERE id = $1"
-	row := r.store.db.QueryRow(query, query_id)
+	row := r.store.DB().QueryRow(query, query_id)
 
 	dep := &model.Departments{}
 	if err := row.Scan(&dep.FullName, &dep.ShortName, &dep.Url); err != nil {
@@ -51,7 +50,7 @@ func (r *DepartmentsRepo) SelectById(query_id string) (*model.Departments, error
 
 func (r *DepartmentsRepo) Delete() error {
 	query := "TRUNCATE TABLE departments RESTART IDENTITY"
-	if _, err := r.store.db.Exec(query); err != nil {
+	if _, err := r.store.DB().Exec(query); err != nil {
 		return err
 	}
 	return nil

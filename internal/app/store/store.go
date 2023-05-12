@@ -99,3 +99,7 @@ func (s *Store) Teachers() *TeachersRepo {
 	}
 	return s.teachersRepo
 }
+
+func (s *Store) DB() *sql.DB {
+	return s.db
+}

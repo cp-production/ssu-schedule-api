@@ -12,7 +12,7 @@ type GroupsRepo struct {
 
 func (r *GroupsRepo) Insert(g *model.Groups) error {
 	query := "INSERT INTO groups VALUES (DEFAULT, $1, $2, $3)"
-	if _, err := r.store.db.Exec(query, g.EdForm, g.GroupNum, g.DepId); err != nil {
+	if _, err := r.store.DB().Exec(query, g.EdForm, g.GroupNum, g.DepId); err != nil {
 		return err
 	}
 
@@ -20,8 +20,8 @@ func (r *GroupsRepo) Insert(g *model.Groups) error {
 }
 
 func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]model.Groups, error) {
-	query := "SELECT * FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2)"
-	rows, err := r.store.db.Query(query, ed_form, dep_url)
+	query := "SELECT * FROM groups WHERE education_form = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2)"
+	rows, err := r.store.DB().Query(query, ed_form, dep_url)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +41,8 @@ func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]mod
 }
 
 func (r *GroupsRepo) SelectId(edForm string, groupNum string, url string) (int, error) {
-	query := "SELECT id FROM groups WHERE edForm = $1 AND groupNum = $2 AND dep_id = (SELECT id FROM departments WHERE url = $3)"
-	row := r.store.db.QueryRow(query, edForm, groupNum, url)
+	query := "SELECT id FROM groups WHERE education_form = $1 AND group_num = $2 AND department_id = (SELECT id FROM departments WHERE url = $3)"
+	row := r.store.DB().QueryRow(query, edForm, groupNum, url)
 
 	var id int
 	if err := row.Scan(&id); err != nil {
@@ -52,7 +52,7 @@ func (r *GroupsRepo) SelectId(edForm string, groupNum string, url string) (int, 
 }
 
 func (r *GroupsRepo) SelectAll() (*[]model.Groups, error) {
-	rows, err := r.store.db.Query("SELECT * FROM groups")
+	rows, err := r.store.DB().Query("SELECT * FROM groups")
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (r *GroupsRepo) SelectAll() (*[]model.Groups, error) {
 
 func (r *GroupsRepo) Delete() error {
 	query := "TRUNCATE TABLE groups RESTART IDENTITY"
-	if _, err := r.store.db.Exec(query); err != nil {
+	if _, err := r.store.DB().Exec(query); err != nil {
 		return err
 	}
 	return nil

@@ -188,13 +188,13 @@ const docTemplate = `{
         "model.Departments": {
             "type": "object",
             "properties": {
-                "fullName": {
+                "full_name": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "shortName": {
+                "short_name": {
                     "type": "string"
                 },
                 "url": {
@@ -205,13 +205,13 @@ const docTemplate = `{
         "model.Groups": {
             "type": "object",
             "properties": {
-                "depId": {
+                "department_id": {
                     "type": "integer"
                 },
-                "edForm": {
+                "education_form": {
                     "type": "string"
                 },
-                "groupNum": {
+                "group_num": {
                     "type": "string"
                 },
                 "id": {
@@ -222,28 +222,28 @@ const docTemplate = `{
         "model.StudentsLesson": {
             "type": "object",
             "properties": {
-                "dayNum": {
+                "day_num": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "lessonName": {
+                "lesson_name": {
                     "type": "string"
                 },
-                "lessonPlace": {
+                "lesson_place": {
                     "type": "string"
                 },
-                "lessonType": {
+                "lesson_type": {
                     "type": "string"
                 },
-                "subgroupName": {
+                "subgroup_name": {
                     "type": "string"
                 },
                 "teacher": {
                     "type": "string"
                 },
-                "weekType": {
+                "week_type": {
                     "type": "string"
                 }
             }
@@ -251,10 +251,10 @@ const docTemplate = `{
         "model.Subgroups": {
             "type": "object",
             "properties": {
-                "groupId": {
+                "group_id": {
                     "type": "integer"
                 },
-                "subgroupName": {
+                "subgroup_name": {
                     "type": "string"
                 }
             }
