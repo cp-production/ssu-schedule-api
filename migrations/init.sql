@@ -1,53 +1,53 @@
 CREATE TABLE departments (
     id SERIAL PRIMARY KEY,
-    fullName varchar not null,
-    shortName varchar not null,
+    full_name varchar not null,
+    short_name varchar not null,
     url varchar not null
 );
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
-    edForm varchar not null,
-    groupNum varchar not null,
-    dep_id int not null
+    education_form varchar not null,
+    group_num varchar not null,
+    department_id int not null
 );
 
 CREATE TABLE subgroups (
     id SERIAL PRIMARY KEY,
-    subgroupName varchar not null,
+    subgroup_name varchar not null,
     group_id SERIAL not null
 );
 
 CREATE TABLE teachers (
     id SERIAL PRIMARY KEY,
-    fullName varchar not null
+    full_name varchar not null
 );
 
-CREATE TABLE studentsSchedule (
+CREATE TABLE students_schedule (
     id SERIAL PRIMARY KEY,
     group_id int not null,
-    dayNum varchar not null, 
-    weekType varchar not null, 
-    lessonType varchar not null,
-    lessonName varchar not null,
+    day_num varchar not null, 
+    week_type varchar not null, 
+    lesson_type varchar not null,
+    lesson_name varchar not null,
     teacher varchar not null,
-    lessonPlace varchar not null,
-    subgroupName varchar not null    
+    lesson_place varchar not null,
+    subgroup_name varchar not null    
 );
 
-CREATE TABLE teachersSchedule (
+CREATE TABLE teachers_schedule (
     id SERIAL PRIMARY KEY,
-    dayNum varchar not null,
-    weekType varchar not null,
-    lessonType varchar not null,
-    lessonName varchar not null,
-    groupNum varchar not null,
-    lessonPlace varchar not null,
-    subgroupName varchar not null
+    day_num varchar not null,
+    week_type varchar not null,
+    lesson_type varchar not null,
+    lesson_name varchar not null,
+    group_num varchar not null,
+    lesson_place varchar not null,
+    subgroup_name varchar not null
 )
 ALTER TABLE groups
 ADD CONSTRAINT groups_dep_id_fkey
-FOREIGN KEY (dep_id)
+FOREIGN KEY (department_id)
 REFERENCES departments(id);
 
 ALTER TABLE subgroups

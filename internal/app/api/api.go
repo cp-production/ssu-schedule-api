@@ -65,5 +65,6 @@ func configureStore(config *Config, logger *logrus.Logger) (*store.Store, error)
 		}
 	}()
 
+
 	return st, nil
 }

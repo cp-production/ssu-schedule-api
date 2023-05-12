@@ -1,9 +1,10 @@
 package parser
 
 import (
-	"strings"
 	"fmt"
+	"strings"
 	"time"
+
 	// "sync"
 
 	"github.com/cp-production/ssu-schedule-api/internal/app/api/model"
@@ -87,7 +88,6 @@ func ParseAll(s *store.Store) error {
 	if err := ParseSubgroups(s); err != nil {
 		return err
 	}
-
 
 	return nil
 }
