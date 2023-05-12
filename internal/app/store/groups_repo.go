@@ -20,7 +20,7 @@ func (r *GroupsRepo) Insert(g *model.Groups) error {
 }
 
 func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]model.Groups, error) {
-	query := "SELECT * FROM groups WHERE education_form = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2)"
+	query := "SELECT * FROM groups WHERE education_form = $1 AND department_id = (SELECT id FROM departments WHERE url = $2)"
 	rows, err := r.store.DB().Query(query, ed_form, dep_url)
 	if err != nil {
 		return nil, err
