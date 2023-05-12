@@ -4,7 +4,6 @@ import (
 	"github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 )
 
-
 type SubgroupsRepo struct {
 	store *Store
 }

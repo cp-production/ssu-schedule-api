@@ -1,7 +1,7 @@
 package model
 
 type TeachersSchedule struct {
-	Id           int `json:"id"`
+	Id           int    `json:"id"`
 	DayNum       string `json:"day_num"`
 	WeekType     string `json:"week_type"`
 	LessonType   string `json:"lesson_type"`

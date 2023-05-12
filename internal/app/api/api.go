@@ -48,5 +48,5 @@ func configureStore(config *Config, logger *logrus.Logger) (*store.Store, error)
 	// }
 	logger.Info("Parsed SSU info in ", time.Since(start))
 
-	return st, nil 
+	return st, nil
 }
