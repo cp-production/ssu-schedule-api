@@ -40,6 +40,27 @@ func (r *GroupsRepo) SelectByDepartments(ed_form string, dep_url string) (*[]mod
 	return &groups, nil
 }
 
+func (r *GroupsRepo) SelectByDepartment(dep_id int) (*[]model.Groups, error) {
+	query := "SELECT * FROM groups WHERE department_id = $1"
+	rows, err := r.store.DB().Query(query, dep_id)
+	if err != nil {
+		return nil, err
+	}
+
+	var groups []model.Groups
+	for rows.Next() {
+		group := &model.Groups{}
+		if err := rows.Scan(&group.Id, &group.EdForm, &group.GroupNum, &group.DepId); err != nil {
+			if err == sql.ErrNoRows {
+				return nil, err
+			}
+			return nil, err
+		}
+		groups = append(groups, *group)
+	}
+	return &groups, nil
+}
+
 func (r *GroupsRepo) SelectId(edForm string, groupNum string, url string) (int, error) {
 	query := "SELECT id FROM groups WHERE education_form = $1 AND group_num = $2 AND department_id = (SELECT id FROM departments WHERE url = $3)"
 	row := r.store.DB().QueryRow(query, edForm, groupNum, url)

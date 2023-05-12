@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	// "github.com/cp-production/ssu-schedule-api/internal/app/parser"
+	"github.com/cp-production/ssu-schedule-api/internal/app/parser"
 
 	_ "github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 	"github.com/cp-production/ssu-schedule-api/internal/app/parser"

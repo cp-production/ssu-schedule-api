@@ -137,7 +137,7 @@ func ParseGroups(s *store.Store, url string, depID int) (*[]model.Groups, error)
 		}
 	}
 
-	processedGroups, err := groupsRepo.SelectAll()
+	processedGroups, err := groupsRepo.SelectByDepartment(depID)
 	if err != nil {
 		return nil, err
 	}
