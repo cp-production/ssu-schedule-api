@@ -163,6 +163,7 @@ func ParseStudentsSchedule(s *store.Store, groupId int, educationForm string, gr
 			WeekType:     rows.WeekType,
 			LessonType:   rows.LessonType,
 			LessonName:   rows.Name,
+			LessonNumber: rows.LessonTime.LessonNumber,
 			Teacher:      teacherFullName,
 			LessonPlace:  rows.Place,
 			SubgroupName: rows.SubGroup}

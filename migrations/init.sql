@@ -30,9 +30,10 @@ CREATE TABLE students_schedule (
     week_type varchar not null, 
     lesson_type varchar not null,
     lesson_name varchar not null,
+    lesson_number int not null,
     teacher varchar not null,
     lesson_place varchar not null,
-    subgroup_name varchar not null    
+    subgroup_name varchar not null   
 );
 
 CREATE TABLE teachers_schedule (

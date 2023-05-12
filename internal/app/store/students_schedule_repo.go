@@ -1,6 +1,8 @@
 package store
 
 import (
+	"fmt"
+
 	"github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 )
 
@@ -9,9 +11,10 @@ type StudentsScheduleRepo struct {
 }
 
 func (r *StudentsScheduleRepo) Insert(s *model.StudentsLesson) error {
-	query := "INSERT INTO students_schedule VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)"
+	query := "INSERT INTO students_schedule VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	if _, err := r.store.DB().Exec(query, s.GroupId, s.DayNum, s.WeekType, s.LessonType,
-		s.LessonName, s.Teacher, s.LessonPlace, s.SubgroupName); err != nil {
+		s.LessonName, s.LessonNumber, s.Teacher, s.LessonPlace, s.SubgroupName); err != nil {
+		fmt.Print(err)
 		return err
 	}
 	return nil
@@ -28,7 +31,7 @@ func (r *StudentsScheduleRepo) Select(educationForm string, departmentUrl string
 		lesson := &model.StudentsLesson{}
 		// TODO: Fix this
 		var id int
-		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
+		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.LessonNumber, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
 			return nil, err
 		}
 		lessons = append(lessons, *lesson)
@@ -47,7 +50,7 @@ func (r *StudentsScheduleRepo) SelectAll() (*[]model.StudentsLesson, error) {
 		lesson := &model.StudentsLesson{}
 		// TODO: Change this
 		var id int
-		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
+		if err := rows.Scan(&id, &lesson.GroupId, &lesson.DayNum, &lesson.WeekType, &lesson.LessonType, &lesson.LessonName, &lesson.LessonNumber, &lesson.Teacher, &lesson.LessonPlace, &lesson.SubgroupName); err != nil {
 			return nil, err
 		}
 		lessons = append(lessons, *lesson)
