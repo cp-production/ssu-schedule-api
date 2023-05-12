@@ -46,7 +46,7 @@ func configureStore(config *Config, logger *logrus.Logger) (*store.Store, error)
 	// if err != nil {
 	// 	return nil, err
 	// }
-	logger.Info("Parsed SSU Schedule in ", time.Since(start))
+	logger.Info("Parsed SSU info in ", time.Since(start))
 
 	return st, nil 
 }

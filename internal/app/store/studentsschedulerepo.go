@@ -20,7 +20,7 @@ func (r *StudentsScheduleRepo) Insert(s *model.StudentsLesson) error {
 
 func (r *StudentsScheduleRepo) Select(educationForm string, departmentUrl string, groupNum string) (*[]model.StudentsLesson, error) {
 
-	query := "SELECT * FROM studentsschedule WHERE group_id = (SELECT group_id FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2) AND groupNum = $3)"
+	query := "SELECT * FROM studentsschedule WHERE group_id = (SELECT id FROM groups WHERE edForm = $1 AND dep_id = (SELECT id FROM departments WHERE url = $2) AND groupNum = $3)"
 	rows, err := r.store.db.Query(query, educationForm, departmentUrl, groupNum)
 	if err != nil {
 		return nil, err
