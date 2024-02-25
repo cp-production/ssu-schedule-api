@@ -1,8 +1,6 @@
 package store
 
 import (
-	"fmt"
-
 	"github.com/cp-production/ssu-schedule-api/internal/app/api/model"
 )
 
@@ -14,7 +12,6 @@ func (r *StudentsScheduleRepo) Insert(s *model.StudentsLesson) error {
 	query := "INSERT INTO students_schedule VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	if _, err := r.store.DB().Exec(query, s.GroupId, s.DayNum, s.WeekType, s.LessonType,
 		s.LessonName, s.LessonNumber, s.Teacher, s.LessonPlace, s.SubgroupName); err != nil {
-		fmt.Print(err)
 		return err
 	}
 	return nil

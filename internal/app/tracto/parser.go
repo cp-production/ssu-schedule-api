@@ -39,14 +39,15 @@ func GetGroupList(dep_url string) ([][]string, error) {
 	if err != nil {
 		return groupList, err
 	}
-
 	re := regexp.MustCompile(`(?s)<div class="fieldset-wrapper">(.+?)</div>`)
 	values := re.FindAllStringSubmatch(string(body), -1)
-	reNumOfGroup := regexp.MustCompile(fmt.Sprintf(`%s/(\w+)/(\d+)`, dep_url))
+	reNumOfGroup := regexp.MustCompile(fmt.Sprintf(`%s/(\w+)[^>]*>([^<]+)`, dep_url))
+
 	for _, rows := range values {
 		curGroup := reNumOfGroup.FindAllStringSubmatch(rows[0], -1)
 		for _, val := range curGroup {
 			groupList = append(groupList, []string{val[1], val[2]})
+
 		}
 	}
 
